@@ -1,15 +1,14 @@
 package com.sg.moviecatalogservice.models;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
-public class Rating {
-
-    private String movieId;
-    private int rating;
+@Data
+public class UserRating {
+    private List<Rating> userRatings;
 }
