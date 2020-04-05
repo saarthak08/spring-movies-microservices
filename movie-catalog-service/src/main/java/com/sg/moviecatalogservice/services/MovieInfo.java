@@ -2,6 +2,7 @@ package com.sg.moviecatalogservice.services;
 
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.sg.moviecatalogservice.models.CatalogItem;
 import com.sg.moviecatalogservice.models.Movie;
 import com.sg.moviecatalogservice.models.UserRating;
@@ -23,7 +24,12 @@ public class MovieInfo {
         this.restTemplate = restTemplate;
     }
 
-    @HystrixCommand(fallbackMethod = "getFallbackMethod")
+    @HystrixCommand(fallbackMethod = "getFallbackMethod",
+    threadPoolKey = "movieInfo",
+    threadPoolProperties = {
+            @HystrixProperty(name = "coreSize", value = "20"),
+            @HystrixProperty(name = "maxQueueSize", value = "10"),
+    })
     public List<CatalogItem> getCatalogItems(UserRating userRating) {
         return userRating.getUserRatings().stream().map(rating -> {
             Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
